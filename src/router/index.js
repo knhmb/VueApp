@@ -15,14 +15,19 @@ const routes = [
     component: Login,
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: () => import('../components/Register.vue')
+    path: "/register",
+    name: "Register",
+    component: () => import("../components/Register.vue"),
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/all-users",
+    name: "All-Users",
+    component: () => import("../components/AllUsers.vue"),
   },
   // {
   //   path: '/login',

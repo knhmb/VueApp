@@ -6,7 +6,7 @@
       <h3>Update Information</h3>
       <div class="user-info">
         <label>Choose Avatar</label>
-        <img :src="avatar" alt="" />
+        <img src="" alt="" />
         <input type="file" @change="fileSelected" />
         <label>Change Username</label>
         <input type="text" :value="$route.params.username" />
@@ -21,16 +21,13 @@
   </div>
 </template>
 <script>
-// import Header from "../components/Header.vue";
 export default {
-  components: {
-    // Header,
-  },
   data() {
     return {
       changedPassword: "",
       confirmPassword: "",
       isMatch: false,
+      data: [],
     };
   },
   methods: {
@@ -42,6 +39,11 @@ export default {
         alert("Information Updated");
       }
     },
+  },
+  mounted() {
+    localStorage.getItem("usersData") &&
+      this.data.push(JSON.parse(localStorage.getItem("usersData")));
+    console.log(this.data);
   },
 };
 </script>

@@ -18,7 +18,7 @@
             </div>
             <form @submit.prevent="nextPage">
               <div class="input-group">
-                <label>Username</label>
+                <label>Email</label>
                 <input type="email" v-model="username" />
               </div>
               <div class="input-group">
