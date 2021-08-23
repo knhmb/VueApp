@@ -8,10 +8,17 @@
           alt=""
         />
         <router-link to="/" class="login">VueApp</router-link>
-        <router-link v-if="$route.path === '/dashboard'" to="/" class="login"
+        <router-link
+          @click="removeData"
+          v-if="$route.path === '/dashboard'"
+          to="/"
+          class="login"
           >Logout</router-link
         >
-        <router-link v-else to="/login" class="login">Login</router-link>
+        <div v-else>
+          <router-link to="/login" class="login">Login</router-link>
+          <router-link to="/register" class="login">Register</router-link>
+        </div>
       </div>
     </div>
   </header>
@@ -22,6 +29,13 @@ export default {
   props: {
     isTrue: {
       type: Boolean,
+    },
+  },
+  methods: {
+    removeData() {
+      if (localStorage.getItem("usersData")) {
+        localStorage.removeItem("usersData");
+      }
     },
   },
   created() {

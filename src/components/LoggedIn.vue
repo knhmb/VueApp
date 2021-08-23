@@ -70,6 +70,7 @@ export default {
   align-items: center;
   border: 2px solid lightgreen;
   min-height: 430px;
+  border-radius: 20px;
   /* text-align: center; */
 }
 

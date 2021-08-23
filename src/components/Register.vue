@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <Header :isTrue="$route.params.isTrue" /> -->
     <main id="main">
       <div class="container">
         <div class="main-content">
@@ -8,7 +9,7 @@
             <p>Enter your details in the left section</p>
           </div>
           <div class="second-section">
-            <h1>Login</h1>
+            <h1>Register</h1>
             <div class="icons">
               <fa
                 class="icon"
@@ -16,27 +17,29 @@
               />
               <fa class="icon" :icon="{ prefix: 'fab', iconName: 'google' }" />
             </div>
-            <form @submit.prevent="nextPage">
+            <form @submit.prevent="registered">
               <div class="input-group">
                 <label>Username</label>
-                <input type="email" v-model="username" />
+                <input type="text" v-model="user.username" />
+              </div>
+              <div class="input-group">
+                <label>Email</label>
+                <input type="email" v-model="user.email" />
               </div>
               <div class="input-group">
                 <label>Password</label>
                 <div class="password-show">
-                  <input :type="passwordText" v-model="password" />
-                  <fa class="pass-change" :icon="show" @click="checkPassword" />
+                  <input v-model="user.password" type="password" />
                 </div>
-                <span class="alert" v-if="isFieldEmpty"
-                  >Field cannot be empty</span
+                <span v-if="isPasswordEmpty" class="alert"
+                  >All Fields Must Be Filled</span
                 >
-                <span class="alert" v-if="isUserDoesnotExist"
-                  >User Does Not Exist</span
+                <span v-if="isUserRegistered" class="alert"
+                  >Email Already Exists</span
                 >
               </div>
               <div class="login-info">
-                <button class="button-login">Login</button>
-                <a href="#" class="forgot-password">Forgot Password?</a>
+                <button class="button-login">Resgister</button>
               </div>
             </form>
           </div>
@@ -50,54 +53,43 @@
 export default {
   data() {
     return {
-      passwordText: "password",
-      username: "",
-      password: "",
-      isFieldEmpty: false,
-      isUserDoesnotExist: false,
-      loginText: "Login",
-      show: "eye",
-      users: "",
+      isPasswordEmpty: false,
+      isUserRegistered: false,
+      user: {
+        username: "",
+        email: "",
+        password: "",
+      },
+      users: [],
     };
   },
   methods: {
-    nextPage() {
-      const userExists = this.users.some(
-        (user) => user.email === this.username
+    registered() {
+      const UserExists = this.users.some(
+        (user) => user.email === this.user.email
       );
-      if (this.username === "" || this.password === "") {
-        this.isFieldEmpty = true;
-      } else if (this.username !== "" && this.password !== "" && !userExists) {
-        this.isUserDoesnotExist = true;
-        this.isFieldEmpty = false;
+      if (
+        this.user.password === "" ||
+        this.user.email === "" ||
+        this.user.username === ""
+      ) {
+        this.isPasswordEmpty = true;
+      } else if (UserExists) {
+        this.isUserRegistered = true;
       } else {
-        this.isEmptyLogin = false;
-        this.isEmptyPassword = false;
-        this.$router.push({
-          name: "Dashboard",
-          params: { username: this.username },
+        this.isPasswordEmpty = false;
+        this.users.unshift({
+          username: this.user.username,
+          email: this.user.email,
+          password: this.user.password,
         });
+        localStorage.setItem("usersData", JSON.stringify(this.users));
+        this.$router.push({ name: "Login" });
       }
     },
-    checkPassword() {
-      if (this.show === "eye") {
-        this.show = "eye-slash";
-        this.passwordText = "text";
-      } else {
-        this.show = "eye";
-        this.passwordText = "password";
-      }
-    },
-  },
-  mounted() {
-    if (localStorage.getItem("usersData")) {
-      this.users = JSON.parse(localStorage.getItem("usersData"));
-      console.log(this.users);
-    }
   },
 };
 </script>
-
 
 <style scoped>
 #main .main-content {
@@ -196,7 +188,7 @@ export default {
   color: rgba(0, 0, 0, 0.529);
   width: 100%;
   border-radius: 5px;
-  width: 260px;
+  min-width: 260px;
   margin-right: 5px;
 }
 
@@ -218,6 +210,7 @@ export default {
   cursor: pointer;
   transition: 0.2s;
   font-weight: bold;
+  width: 100%;
 }
 
 .button-login:hover {
@@ -249,13 +242,4 @@ export default {
     display: flex;
   }
 }
-
-/* @media (min-width: 992px) {
-}
-
-@media (min-width: 1200px) {
-}
-
-@media (min-width: 1400px) {
-} */
 </style>
